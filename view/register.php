@@ -12,17 +12,17 @@
     </div>
     <div class="whole">
         <div class="left">
-            <img src="food.jpeg" alt="Kitchen Image">
+            <img src="../assets/food.jpeg" alt="Kitchen Image">
         </div>
         <div class="right">
             <div class="form-container">
                 <header><h1>Sign Up</h1></header>
-                <form id="signupForm">
+                <form id="signupForm" method="POST" action="../actions/register_user.php">
                     <label for="firstname">First Name</label>
-                    <input type="text" id="firstname" name="firstname" required>
+                    <input type="text" id="firstname" name="fname" required>
 
                     <label for="lastname">Last Name</label>
-                    <input type="text" id="lastname" name="lastname" required>
+                    <input type="text" id="lastname" name="lname" required>
 
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required pattern=".*@gmail\.com$" title="Email must end with gmail.com">
@@ -33,12 +33,31 @@
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" name="confirmPassword" required>
 
+                    <!-- Error message will be displayed here -->
+                    <div id="error-message" style="color: red; font-weight: bold;"></div>
+
                     <button type="submit">Sign Up</button>
                     <p>Already have an account? <a href="login.html">Login</a></p>
                 </form>
             </div>
         </div>
     </div>
+    
+    <!-- External JavaScript file for message handling -->
     <script src="../public/js/register.js"></script>
+    <script>
+        // Check if there's an error message in the URL
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorMsg = urlParams.get('msg');
+
+    if (errorMsg) {
+        // Display the error message in the error-message div
+        document.getElementById("error-message").textContent = errorMsg;
+        document.getElementById("error-message").style.color = "red";
+    }
+};
+
+    </script>
 </body>
 </html>

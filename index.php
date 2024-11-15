@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../public/css/index.css">
+    <link rel="stylesheet" href="./public/css/index.css">
     <title>Ms. A's Recipe Hub</title>
 </head>
 
@@ -21,8 +21,8 @@
             <h1>Welcome to Ms. A's Recipe Hub!</h1>
             <p>Find easy and tasty recipes to try at home, and share your own recipes with others. It's a fun place for everyone who loves cooking!"</p>
             <div class="homelinks">
-                <a href="login.html">Login</a> | 
-                <a href="signup.html">Sign Up</a>
+                <a href="./view/login.php">Login</a> | 
+                <a href="./view/register.php">Sign Up</a>
             </div>
             <button onclick="window.location.href='recipe_feed.html'">Get Started</button>
         </div>
