@@ -28,12 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Store user information in the session
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['role'] = $role;
+                
 
                 // Redirect based on user role
                 if ($role == 1) {
                     header("Location: admin_dashboard.php");
                 } else {
-                    header("Location: ../view/recipes.php");
+                    header("Location: ../view/userdashboard.php");
                 }
                 exit;
             } else {

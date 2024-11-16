@@ -1,9 +1,16 @@
+<?php
+// Include the database connection file
+include '../db/database.php';
+include '../functions/getrecipes.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Management</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../public/css/recipe.css">
 </head>
 <body>
@@ -25,71 +32,27 @@
                 <tr>
                     <th>ID</th>
                     <th>Title</th>
-                    <th>Author</th>
                     <th>Date Created</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Spaghetti Bolognese</td>
-                    <td>Nana Afia Asante</td>
-                    <td>2024-03-10</td>
-                    <td>
-                        <button class="btn btn-read" onclick="viewMore(1)">Read</button>
-                        <button class="btn btn-update" onclick="editRecipe(1)">Update</button>
-                        <button class="btn btn-delete" onclick="confirmDeletion(1)">Delete</button>
+        <?php foreach ($recipes as $recipe): ?>
+            <tr>
+                <td><?php echo $recipe['id']; ?></td>
+                <td><?php echo htmlspecialchars($recipe['name']); ?></td>
+                <td><?php echo $recipe['date_created']; ?></td>
+                <td>
+                    <button class="btn btn-read" onclick="viewMore(<?php echo $recipe['id']; ?>)">Read</button>
+                    <button class="btn btn-update" onclick="editRecipe(<?php echo $recipe['id']; ?>)">Update</button>
+                    <a href="../functions/deleterecipe.php?delete_recipe_id=<?php echo $recipe['id']; ?>" class="btn btn-delete" onclick="return confirmDeletion(<?php echo $recipe['id']; ?>)">Delete</a>
                     </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Jollof Rice</td>
-                    <td>Natalie Yeboah</td>
-                    <td>2024-04-26</td>
-                    <td>
-                        <button class="btn btn-read" onclick="viewMore(2)">Read</button>
-                        <button class="btn btn-update" onclick="editRecipe(2)">Update</button>
-                        <button class="btn btn-delete" onclick="confirmDeletion(2)">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Banana Cake</td>
-                    <td>Kim Djan</td>
-                    <td>2024-04-30</td>
-                    <td>
-                        <button class="btn btn-read" onclick="viewMore(3)">Read</button>
-                        <button class="btn btn-update" onclick="editRecipe(3)">Update</button>
-                        <button class="btn btn-delete" onclick="confirmDeletion(3)">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Okro Stew</td>
-                    <td>Papa Asante</td>
-                    <td>2024-05-12</td>
-                    <td>
-                        <button class="btn btn-read" onclick="viewMore(4)">Read</button>
-                        <button class="btn btn-update" onclick="editRecipe(4)">Update</button>
-                        <button class="btn btn-delete" onclick="confirmDeletion(4)">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>Chocolate Cake</td>
-                    <td>Joyce Freeman</td>
-                    <td>2024-06-10</td>
-                    <td>
-                        <button class="btn btn-read" onclick="viewMore(5)">Read</button>
-                        <button class="btn btn-update" onclick="editRecipe(5)">Update</button>
-                        <button class="btn btn-delete" onclick="confirmDeletion(5)">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
         </table>
 
-        <a href="dashboard.html" class="btn">Back to Dashboard</a>
+        <a href="userdashboard.php" class="btn">Back to Dashboard</a>
     </main>
 
     <!-- Add Recipe Modal -->
@@ -97,60 +60,72 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Add Recipe</h2>
-            <form id="add-recipe-form" onsubmit="return validateRecipeForm()">
+            <form id="add-recipe-form" action="../actions/recipes_action.php" method="POST" onsubmit="return validateRecipeForm()">
                 <label for="recipe-title">Recipe Title:</label>
-                <input type="text" id="recipe-title" required>
+                <input type="text" id="recipe-title" name="recipe_title" required>
 
-                <label for="ingredients">Ingredients:</label>
-                <textarea id="ingredients" required></textarea>
+                <label for="ingredients">Ingredients (comma-separated):</label>
+                <textarea id="ingredients" name="ingredients" required></textarea>
 
                 <label for="origin">Origin:</label>
-                <input type="text" id="origin" required>
+                <input type="text" id="origin" name="origin" required>
 
                 <label for="nutritional-value">Nutritional Value:</label>
-                <textarea id="nutritional-value" required></textarea>
+                <textarea id="nutritional-value" name="nutritional_value" required></textarea>
 
                 <label for="allergen-info">Allergen Information:</label>
-                <input type="text" id="allergen-info" required>
+                <input type="text" id="allergen-info" name="allergen_info" required>
 
                 <label for="shelf-life">Shelf Life:</label>
-                <input type="text" id="shelf-life" required>
+                <input type="text" id="shelf-life" name="shelf_life" required>
 
                 <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" required>
+                <input type="number" id="quantity" name="quantity" required>
 
                 <label for="unit">Unit:</label>
-                <input type="text" id="unit" required>
+                <input type="text" id="unit" name="unit" required>
 
                 <label for="recipe-image">Recipe Image URL:</label>
-                <input type="url" id="recipe-image" required>
+                <input type="url" id="recipe-image" name="recipe_image" required>
 
                 <label for="prep-time">Preparation Time (in minutes):</label>
-                <input type="number" id="prep-time" required>
+                <input type="number" id="prep-time" name="prep_time" required>
 
                 <label for="cooking-time">Cooking Time (in minutes):</label>
-                <input type="number" id="cooking-time" required>
+                <input type="number" id="cooking-time" name="cooking_time" required>
 
                 <label for="serving-size">Serving Size:</label>
-                <input type="text" id="serving-size" required>
+                <input type="text" id="serving-size" name="serving_size" required>
 
                 <label for="food-description">Food Description:</label>
-                <textarea id="food-description" required></textarea>
+                <textarea id="food-description" name="food_description" required></textarea>
 
                 <label for="calories">Calories per Serving:</label>
-                <input type="number" id="calories" required>
+                <input type="number" id="calories" name="calories" required>
 
                 <label for="food-origin">Food Origin:</label>
-                <input type="text" id="food-origin" required>
+                <input type="text" id="food-origin" name="food_origin" required>
 
                 <label for="instructions">Instructions:</label>
-                <textarea id="instructions" required></textarea>
+                <textarea id="instructions" name="instructions" required></textarea>
 
                 <button type="submit" class="btn">Add Recipe</button>
             </form>
         </div>
     </div>
 
-   <script src="../public/js/recipe.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const msg = urlParams.get('msg');
+        if (msg) {
+            Swal.fire({
+                title: msg.includes('success') ? 'Success' : 'Error',
+                text: msg,
+                icon: msg.includes('success') ? 'success' : 'error',
+            });
+        }
+    </script>
+
+    <script src="../public/js/recipe.js"></script>
 </body>
 </html>

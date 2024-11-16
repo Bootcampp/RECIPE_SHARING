@@ -39,6 +39,5 @@ document.getElementById('signupForm').addEventListener('submit', function(event)
     }
 
     // If all validation passes, submit the form
-    alert('Sign-up successful!');
     this.submit(); 
 });
