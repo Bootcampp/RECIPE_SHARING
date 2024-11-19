@@ -1,5 +1,13 @@
 <?php
-include "../functions/user.php"
+include "../functions/user.php";
+include "../functions/getTotalRecipes.php";
+include "../functions/getRecentRecipes.php";
+checkLogin();
+$userId = $_SESSION['user_id']; 
+
+// Fetch the total number of recipes and the two most recent recipes
+$totalRecipes = getTotalRecipes($userId, $connection);
+$recentRecipes = getRecentRecipes($userId, $connection);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,10 +24,10 @@ include "../functions/user.php"
         <button id="menuToggle" class="menu-toggle">☰</button>
         <nav id="mainNav">
             <ul>
-                <li><a href="index.html">Home</a></li>
                 <li><a href="recipe_feed.html">Favorites</a></li>
                 <li><a href="recipes.php">Manage Recipes</a></li>
                 <li><a href="#">Profile</a></li>
+                <li><a href="../actions/logout.php">Log out</a></li>
             </ul>
         </nav>
     </header>
@@ -31,12 +39,14 @@ include "../functions/user.php"
                 <div class="analytics-grid">
                     <div class="analytics-card">
                         <h3>Total Recipes Added</h3>
-                        <p class="analytics-number" id="totalRecipes">0</p>
+                        <p class="analytics-number" id="totalRecipes"><?php echo $totalRecipes; ?></p>
                     </div>
                     <div class="analytics-card">
                         <h3>Recent Submissions</h3>
                         <ul class="recent-recipes" id="recentRecipes">
-                            <!-- Dynamically populated list -->
+                            <?php foreach ($recentRecipes as $recipe): ?>
+                                <li><?php echo htmlspecialchars($recipe['name']) . ' - ' . date('Y-m-d', strtotime($recipe['created_at'])); ?></li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                 </div>

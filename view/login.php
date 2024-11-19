@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="../public/css/register.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="welcome-text">
@@ -36,18 +37,15 @@
     </div>
     <script src="../public/js/login.js"></script>
     <script>
-        // Check if there's an error message in the URL
-window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const errorMsg = urlParams.get('msg');
-
-    if (errorMsg) {
-        // Display the error message in the error-message div
-        document.getElementById("error-message").textContent = errorMsg;
-        document.getElementById("error-message").style.color = "red";
-    }
-};
-
+        const urlParams = new URLSearchParams(window.location.search);
+        const msg = urlParams.get('msg');
+        if (msg) {
+            Swal.fire({
+                title: msg.includes('success') ? 'Success' : 'Error',
+                text: msg,
+                icon: msg.includes('success') ? 'success' : 'error',
+            });
+        }
     </script>
 </body>
 </html>

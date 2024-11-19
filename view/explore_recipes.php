@@ -1,3 +1,7 @@
+<?php
+include '../db/config.php';
+checkLogin();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

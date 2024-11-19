@@ -2,6 +2,8 @@
 // Include the database connection file
 include '../db/database.php';
 include '../functions/getrecipes.php';
+checkLogin();
+
 ?>
 
 <!DOCTYPE html>
@@ -51,6 +53,45 @@ include '../functions/getrecipes.php';
         <?php endforeach; ?>
     </tbody>
         </table>
+        <script>
+   function editRecipe(recipeId) {
+    fetch(`../functions/retriverecipe.php?id=${recipeId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Error fetching recipe:', data.error);
+                return;
+            }
+
+            // Check if fields exist in the response and set default value if undefined
+            document.getElementById('recipe-title').value = data.name || '';
+            document.getElementById('ingredients').value = data.ingredients || '';
+            document.getElementById('origin').value = data.origin || '';
+            document.getElementById('nutritional-value').value = data.nutritional_value || '';
+            document.getElementById('allergen-info').value = data.allergen_info || '';
+            document.getElementById('shelf-life').value = data.shelf_life || '';
+            document.getElementById('quantity').value = data.quantity || '';
+            document.getElementById('unit').value = data.unit || '';
+            document.getElementById('recipe-image').value = data.recipe_image || '';
+            document.getElementById('prep-time').value = data.prep_time || '';
+            document.getElementById('cooking-time').value = data.cooking_time || '';
+            document.getElementById('serving-size').value = data.serving_size || '';
+            document.getElementById('food-description').value = data.food_description || '';
+            document.getElementById('calories').value = data.calories || '';
+            document.getElementById('food-origin').value = data.food_origin || '';
+            document.getElementById('instructions').value = data.instructions || '';
+
+            // Open the modal
+            document.getElementById('add-recipe-modal').style.display = 'block';
+
+            // Update the form's action to save updates
+            const form = document.getElementById('add-recipe-form');
+            form.action = `../actions/update_recipe_action.php?id=${recipeId}`;
+        })
+        .catch(error => console.error('Error fetching recipe data:', error));
+}
+
+        </script>
 
         <a href="userdashboard.php" class="btn">Back to Dashboard</a>
     </main>
@@ -124,6 +165,7 @@ include '../functions/getrecipes.php';
                 icon: msg.includes('success') ? 'success' : 'error',
             });
         }
+
     </script>
 
     <script src="../public/js/recipe.js"></script>
