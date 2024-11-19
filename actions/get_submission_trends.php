@@ -1,7 +1,5 @@
 <?php
 header('Content-Type: application/json');
-
-// Error reporting to help diagnose issues
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -9,24 +7,19 @@ include '../db/database.php';
 include '../functions/user.php';
 
 try {
-    // Check login
     checkLogin();
     $userId = $_SESSION['user_id'];
 
-    // Get submissions by month for the past 6 months
+    // Modify query to get more comprehensive data
     $query = "SELECT 
-        DATE_FORMAT(created_at, '%Y-%m') AS month, 
+        DATE_FORMAT(created_at, '%b %Y') AS month, 
         COUNT(*) AS recipe_count 
     FROM foods 
-    WHERE created_by = ? AND created_at >= DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH)
+    WHERE created_by = ?
     GROUP BY month 
-    ORDER BY month";
+    ORDER BY created_at";
 
     $stmt = $connection->prepare($query);
-    if (!$stmt) {
-        throw new Exception("Prepare failed: " . $connection->error);
-    }
-
     $stmt->bind_param("i", $userId);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -34,29 +27,31 @@ try {
     $labels = [];
     $values = [];
 
-    // Populate labels and values
+    // Fetch ALL rows
     while ($row = $result->fetch_assoc()) {
         $labels[] = $row['month'];
         $values[] = intval($row['recipe_count']);
     }
 
-    // Ensure we have data
+    // Ensure we have some data or default
     if (empty($labels)) {
         $labels = ['No Data'];
         $values = [0];
     }
 
-    // Return JSON response
     echo json_encode([
         'labels' => $labels,
-        'values' => $values
+        'values' => $values,
+        'debug' => [
+            'total_rows' => count($labels),
+            'first_label' => $labels[0] ?? 'N/A',
+            'first_value' => $values[0] ?? 'N/A'
+        ]
     ]);
 
     $stmt->close();
     $connection->close();
 } catch (Exception $e) {
-    // Send error as JSON
-    http_response_code(500);
     echo json_encode([
         'error' => $e->getMessage()
     ]);

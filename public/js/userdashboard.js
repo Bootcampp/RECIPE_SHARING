@@ -1,46 +1,41 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Fetch submission trends data via AJAX
     fetch('../actions/get_submission_trends.php')
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok: ' + response.status);
-            }
+            console.log('Full response:', response);
             return response.json();
         })
         .then(data => {
-            console.log('Received data:', data); // Log the received data
+            console.log('Received data:', data);
+
+            // Log debug information
+            if (data.debug) {
+                console.log('Debug Info:', data.debug);
+            }
 
             const ctx = document.getElementById('submissionTrendsChart').getContext('2d');
             
-            // Check if we have data
-            if (!data.labels || !data.values || data.labels.length === 0) {
-                console.warn('No chart data available');
-                ctx.fillText('No data available', 50, 100);
+            // Ensure we have data
+            if (!data.labels || data.labels.length === 0) {
+                console.warn('No data available for chart');
+                ctx.fillText('No recipe data available', 50, 100);
                 return;
             }
 
+            // Simple chart with basic configuration
             new Chart(ctx, {
-                type: 'line',
+                type: 'bar', // Changed to bar for easier visibility
                 data: {
                     labels: data.labels,
                     datasets: [{
-                        label: 'Number of Recipes',
+                        label: 'Monthly Recipes',
                         data: data.values,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
                         borderColor: 'rgb(75, 192, 192)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Monthly Recipe Submissions'
-                        }
-                    },
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -48,20 +43,20 @@ document.addEventListener('DOMContentLoaded', function() {
                                 display: true,
                                 text: 'Number of Recipes'
                             }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Month'
-                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Recipe Submissions'
                         }
                     }
                 }
             });
         })
         .catch(error => {
-            console.error('Error fetching or rendering chart:', error);
+            console.error('Complete Chart Error:', error);
             const chartContainer = document.getElementById('submissionTrendsChart');
-            chartContainer.innerHTML = 'Unable to load chart: ' + error.message;
+            chartContainer.innerHTML = 'Chart Loading Error: ' + error.message;
         });
 });
