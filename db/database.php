@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
-$db = 'recipe_sharing';
+$db = 'webtech_fall2024_afia_asante';
 $user = 'root'; 
-$pass = ''; 
+$pass = 'setumte3'; 
 
 // Create a connection
 $connection = mysqli_connect($host, $user, $pass, $db);

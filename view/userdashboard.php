@@ -31,7 +31,7 @@ if ($_SESSION['role'] != 2) {
         <nav id="mainNav">
             <ul>
                 <li><a href="recipes.php">Manage Recipes</a></li>
-                <li><a href="#">Profile</a></li>
+                <li><a href="profile.php">Profile</a></li>
                 <li><a href="../actions/logout.php">Log out</a></li>
             </ul>
         </nav>

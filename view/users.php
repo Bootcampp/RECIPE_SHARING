@@ -1,12 +1,6 @@
 <?php
 include_once '../db/database.php';
-include_once './view/functions/user_functions.php';
-
-// Get database connection
-if ($_SESSION['role'] != 1) {
-    header("Location: userdashboard.php");
-    exit();
-}
+include_once '../functions/user_functions.php';
 
 // Get all users
 $users = getAllUsers($connection);

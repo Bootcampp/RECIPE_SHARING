@@ -2,10 +2,10 @@
 // Include the database connection and functions
 include_once '../../functions/admin_actions.php';
 
-if ($_SESSION['role'] != 2) {
-    header("Location: ../userdashboard.php");
-    exit();
-}
+// if ($_SESSION['role'] != 1) {
+//     header("Location: ../userdashboard.php");
+//     exit();
+// }
 
 // Fetch data
 $total_users = getTotalUsers($connection);
