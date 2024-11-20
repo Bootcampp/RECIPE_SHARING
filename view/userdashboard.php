@@ -8,6 +8,12 @@ $userId = $_SESSION['user_id'];
 // Fetch the total number of recipes and the two most recent recipes
 $totalRecipes = getTotalRecipes($userId, $connection);
 $recentRecipes = getRecentRecipes($userId, $connection);
+
+if ($_SESSION['role'] != 2) {
+    header("Location: ../view/admin/dashboard.php");
+    exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +30,6 @@ $recentRecipes = getRecentRecipes($userId, $connection);
         <button id="menuToggle" class="menu-toggle">☰</button>
         <nav id="mainNav">
             <ul>
-                <li><a href="recipe_feed.html">Favorites</a></li>
                 <li><a href="recipes.php">Manage Recipes</a></li>
                 <li><a href="#">Profile</a></li>
                 <li><a href="../actions/logout.php">Log out</a></li>

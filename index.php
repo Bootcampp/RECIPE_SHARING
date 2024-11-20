@@ -10,9 +10,7 @@
 <body>
     <nav class="blog">
         <ul>
-            <li><a href="dashboard.html">Home</a></li>
-            <li><a href="recipe_feed.html">Recipe</a></li>
-            <li><a href= "#">About</a></li>
+            <li><a href= "../view/about.php">About</a></li>
         </ul>
     </nav>
 
@@ -24,7 +22,6 @@
                 <a href="./view/login.php">Login</a> | 
                 <a href="./view/register.php">Sign Up</a>
             </div>
-            <button onclick="window.location.href='recipe_feed.html'">Get Started</button>
         </div>
     </section>
 </body>

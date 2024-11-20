@@ -8,3 +8,23 @@ function checkLogin() {
         exit();
     }
 }
+
+
+function redirectBasedOnRole() {
+    // Check user role
+    $role = $_SESSION['role'];
+
+    if ($role == 1) {
+        // Super Admin
+        header("Location: ../view/admin/dashboard.php");
+        exit();
+    } elseif ($role == 2) {
+        // Regular Admin
+        header("Location: ../view/userdashboard.php");
+        exit();
+    } else {
+        // Unknown role, log out the user
+        header("Location: ../actions/logout.php?msg=Invalid Role!");
+        exit();
+    }
+}

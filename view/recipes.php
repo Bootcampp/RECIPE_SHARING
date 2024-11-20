@@ -3,6 +3,10 @@
 include '../db/database.php';
 include '../functions/getrecipes.php';
 checkLogin();
+if ($_SESSION['role'] != 2) {
+    header("Location: ../view/admin/dashboard.php");
+    exit();
+}
 
 ?>
 
@@ -45,7 +49,7 @@ checkLogin();
                 <td><?php echo htmlspecialchars($recipe['name']); ?></td>
                 <td><?php echo $recipe['date_created']; ?></td>
                 <td>
-                    <button class="btn btn-read" onclick="viewMore(<?php echo $recipe['id']; ?>)">Read</button>
+                    <button class="btn btn-read" onclick="viewRecipe(<?php echo $recipe['id']; ?>)">Read</button>
                     <button class="btn btn-update" onclick="editRecipe(<?php echo $recipe['id']; ?>)">Update</button>
                     <a href="../functions/deleterecipe.php?delete_recipe_id=<?php echo $recipe['id']; ?>" class="btn btn-delete" onclick="return confirmDeletion(<?php echo $recipe['id']; ?>)">Delete</a>
                     </td>
@@ -90,7 +94,34 @@ checkLogin();
         })
         .catch(error => console.error('Error fetching recipe data:', error));
 }
+function viewRecipe(recipeId) {
+            fetch(`../functions/retriverecipe.php?id=${recipeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        Swal.fire('Error', data.error, 'error');
+                        return;
+                    }
 
+                    // Populate modal with recipe data
+                    document.getElementById('recipe-title-display').textContent = data.name || 'N/A';
+                    document.getElementById('recipe-ingredients').textContent = data.ingredients || 'N/A';
+                    document.getElementById('recipe-instructions').textContent = data.instructions || 'N/A';
+                    document.getElementById('recipe-origin').textContent = data.origin || 'N/A';
+                    document.getElementById('recipe-nutrition').textContent = data.nutritional_value || 'N/A';
+                    document.getElementById('recipe-image').src = data.recipe_image || 'placeholder.jpg';
+
+                    // Show the modal
+                    document.getElementById('recipe-modal').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error fetching recipe data:', error);
+                    Swal.fire('Error', 'Could not fetch recipe details.', 'error');
+                });
+        }
+        function closeModal() {
+            document.getElementById('recipe-modal').style.display = 'none';
+        }
         </script>
 
         <a href="userdashboard.php" class="btn">Back to Dashboard</a>
@@ -152,6 +183,20 @@ checkLogin();
 
                 <button type="submit" class="btn">Add Recipe</button>
             </form>
+        </div>
+    </div>
+
+     <!-- Recipe Modal -->
+     <div id="recipe-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Recipe Details</h2>
+            <p><strong>Title:</strong> <span id="recipe-title-display"></span></p>
+            <p><strong>Ingredients:</strong> <span id="recipe-ingredients"></span></p>
+            <p><strong>Instructions:</strong> <span id="recipe-instructions"></span></p>
+            <p><strong>Origin:</strong> <span id="recipe-origin"></span></p>
+            <p><strong>Nutritional Value:</strong> <span id="recipe-nutrition"></span></p>
+            <img id="recipe-image" alt="Recipe Image" src="" style="max-width: 100%; height: auto;">
         </div>
     </div>
 

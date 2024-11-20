@@ -27,8 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (password_verify($password, $hashed_password)) {
                 // Store user information in the session
                 $_SESSION['user_id'] = $user_id;
+                $_SESSION['fname'] = $fname;
+                $_SESSION['lname'] = $lname;
                 $_SESSION['role'] = $role;
+
                 
+                redirectBasedOnRole();
 
                 // Redirect based on user role
                 if ($role == 1) {
